@@ -1,7 +1,7 @@
 import React from "react"
 import { css } from "@emotion/react"
-import { useStaticQuery, graphql } from "gatsby"
-import { GatsbyImage } from "gatsby-plugin-image"
+
+// TODO - Rewrite this so it doesn't use gatsby
 
 const Portrait = (props) => {
   const data = useStaticQuery(graphql`
@@ -29,12 +29,12 @@ const Portrait = (props) => {
   }
   return (
     <div css={[barStyle]} style={{ maxWidth: `${maxWidth}px` }}>
-      <GatsbyImage
+      {/* <GatsbyImage */}
         image={renderImage.childImageSharp.gatsbyImageData}
         alt={alt}
         objectFit="cover"
         objectPosition="50% 50%"
-      />
+      {/* /> */}
     </div>
   );
 }

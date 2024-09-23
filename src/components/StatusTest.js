@@ -5,7 +5,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from "prop-types"
-import { Link } from 'gatsby'
+
 import { css } from '@emotion/react'
 
 // import { AnchorLink } from "gatsby-plugin-anchor-links";

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link } from 'gatsby'
+
 import { css } from '@emotion/react'
 
 import { cleanPhoneString } from '../../config/utils'
