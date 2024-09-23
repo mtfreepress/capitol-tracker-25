@@ -1,4 +1,3 @@
-// pages/all-bills.js
 import React from "react";
 import Link from "next/link";
 import { css } from "@emotion/react";
@@ -7,7 +6,7 @@ import BillTable from "../components/BillTable";
 import ContactUs from "../components/ContactUs";
 import NewsletterSignup from "../components/NewsletterSignup";
 import { capitalize, numberFormat } from "../config/utils";
-
+import billsJson from "../data-nodes/bills.json";
 const types = [
   "budget bill",
   "house bill",
@@ -28,19 +27,17 @@ const allBillsPageStyle = css`
   }
 `;
 
-const AllBills = ({ data, location }) => {
-  const allBills = data.allBillsJson.edges.map(d => d.node)
-  // const types = Array.from(new Set(allBills.map(d => d.type)))
+const AllBills = () => {
+  const allBills = billsJson;
 
   const byType = types.map(type => ({
     type,
-    bills: allBills.filter(d => d.type === type)
-  }))
-
+    bills: allBills.filter(d => d.type === type),
+  }));
 
   return (
     <div css={allBillsPageStyle}>
-      <Layout location={location}>
+      <Layout>
         <h1>All 2023 bills</h1>
         <div className="note">
           <strong>{numberFormat(allBills.length)}</strong> total bills, resolutions, and other measures introduced
