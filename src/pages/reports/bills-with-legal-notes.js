@@ -1,33 +1,31 @@
-import React from "react"
-import { graphql } from 'gatsby'
+import React from "react";
+import Layout from '../../components/Layout';
+import BillTable from '../../components/BillTable';
+import ContactUs from '../../components/ContactUs';
+import bills from '../../data/bills.json';
 
-import Layout from '../../components/Layout'
-import BillTable from '../../components/BillTable'
-import ContactUs from '../../components/ContactUs'
+const LegalNoteBills = ({ billsWithLegalNotes }) => {
+  return (
+    <div>
+      <Layout>
+        <h1>2023 bills with legal notes</h1>
+        <BillTable bills={billsWithLegalNotes} displayLimit={1200} />
+        <ContactUs />
+      </Layout>
+    </div>
+  );
+};
 
-const LegalNoteBills = ({ data, location }) => {
-  const bills = data.billsWithLegalNotes.edges.map(d => d.node)
+// Function to fetch bills with legal notes
+export const getStaticProps = async () => {
+  // Filter bills to include only those with legal notes
+  const billsWithLegalNotes = bills.filter(bill => bill.legalNoteUrl !== null);
 
-  return <div>
-    <Layout location={location}>
-      <h1>2023 bills with legal notes</h1>
-      <BillTable bills={bills} displayLimit={1200} />
-      <ContactUs />
-    </Layout>
-  </div>
-}
+  return {
+    props: {
+      billsWithLegalNotes,
+    },
+  };
+};
 
-export const query = graphql`
-  query FiscalNotes {
-    billsWithLegalNotes: allBillsJson(filter: {legalNoteUrl: {ne: null}}) {
-      edges {
-        node {
-          ...BillTableData
-          type
-        }
-      }
-    }
-  }
-`
-
-export default LegalNoteBills
+export default LegalNoteBills;

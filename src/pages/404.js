@@ -1,7 +1,6 @@
-// pages/404.js
 import * as React from "react";
-import Link from "next/link";  // Use Next.js Link for internal navigation
-import Head from "next/head";  // Use Next.js Head for SEO
+import Link from "next/link";
+import Head from "next/head";
 
 const pageStyles = {
   color: "#232129",

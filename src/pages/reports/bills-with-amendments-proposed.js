@@ -1,33 +1,30 @@
-import React from "react"
-import { graphql } from 'gatsby'
+import React from 'react';
+import Layout from '../components/Layout'; 
+import BillTable from '../components/BillTable';
+import ContactUs from '../components/ContactUs';
+import bills from '../data/bills.json';
 
-import Layout from '../../components/Layout'
-import BillTable from '../../components/BillTable'
-import ContactUs from '../../components/ContactUs'
+const BillsWithAmendments = ({ bills }) => {
+    return (
+        <div>
+            <Layout>
+                <h1>2023 bills with proposed amendments</h1>
+                <BillTable bills={bills} displayLimit={1200} />
+                <ContactUs />
+            </Layout>
+        </div>
+    );
+};
 
-const BillsWithAmendments = ({ data, location }) => {
-    const bills = data.billsWithAmendmentsProposed.edges.map(d => d.node)
+export const getStaticProps = async () => {
+    // Filter bills with proposed amendments
+    const billsWithAmendments = bills.filter(bill => bill.amendmentsUrl !== null);
 
-    return <div>
-        <Layout location={location}>
-            <h1>2023 bills with proposed amendments</h1>
-            <BillTable bills={bills} displayLimit={1200} />
-            <ContactUs />
-        </Layout>
-    </div>
-}
+    return {
+        props: {
+            bills: billsWithAmendments,
+        },
+    };
+};
 
-export const query = graphql`
-  query AmendmentBills {
-    billsWithAmendmentsProposed: allBillsJson(filter: {amendmentsUrl: {ne: null}}) {
-      edges {
-        node {
-          ...BillTableData
-          type
-        }
-      }
-    }
-  }
-`
-
-export default BillsWithAmendments
+export default BillsWithAmendments;

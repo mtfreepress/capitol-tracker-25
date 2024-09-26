@@ -1,128 +1,151 @@
-import React from "react"
-import { graphql, Link } from 'gatsby'
-import { css } from '@emotion/react'
-import ReactMarkdown from 'react-markdown'
+import React from 'react';
+import { css } from '@emotion/react';
+import Link from 'next/link';
+import { shortDateWithWeekday, billUrl } from '../config/utils';
 
-import Layout from '../components/Layout'
-import Seo from "../components/Seo"
-import TruncatedContainer from '../components/TruncatedContainer'
-import Roster from '../components/Roster'
-import ChamberLeadership from '../components/ChamberLeadership'
-import CommitteeSummary from "../components/committee/Summary";
-import ContactUs from '../components/ContactUs'
-import NewsletterSignup from '../components/NewsletterSignup'
+import Layout from '../components/Layout';
+import Seo from '../components/Seo';
+import ContactUs from '../components/ContactUs';
+import NewsletterSignup from '../components/NewsletterSignup';
 
-import senateData from '../data/senate.json'
+import recap from '../data/recap.json';
 
-const committeeItemStyle = css`
-  border: 1px solid var(--tan5);
-  border-left: 4px solid var(--tan5);
-  background: var(--tan1);
-  padding: 0.2em;
-  margin-bottom: 0.5em;
-
-  h4 {
-    padding: 0.2em;
-    margin: 0.2em 0;
-    a {
-      text-transform: uppercase;
-    }
+const actionsDayStyle = css`
+  h2 {
+    color: white;
+    background-color: var(--gray5);
+    padding: 0.5em 0.5em;
+    position: sticky;
+    top: 130px;
+    z-index: 10;
   }
-`
+`;
 
-// TODO - break this out to app text
-const leadership = [
-  { role: 'Senate President', name: 'Sen. Jason Ellsworth (R-Hamilton)', key: 'Jason-Ellsworth' },
-  { role: 'Senate Majority Leader', name: 'Sen. Steve Fitzpatrick (R-Great Falls)', key: 'Steve-Fitzpatrick' },
-  { role: 'Senate Minority Leader', name: 'Sen. Pat Flowers (D-Belgrade)', key: 'Pat-Flowers' },
-]
+const cleanDescription = text => text.replace('Committee Executive Action--', 'Committee Action: ');
 
-const Senate = ({ data, location }) => {
-  const { text } = senateData
-  const senators = data.allLawmakersJson.edges.map(d => d.node)
-  const committees = data.allCommitteesJson.edges.map(d => d.node)
-  return <div>
+const Actions = () => {
+  const { actionsByDate } = recap;
 
-    <Layout location={location}>
-      <h1>The Montana Senate</h1>
-      <Link to="/senate#members">Senators ({senators.length}) </Link> • <Link to="/senate#committees">Committees ({committees.length})</Link>
-      <ReactMarkdown>{text}</ReactMarkdown>
-      {/* <Text paragraphs={text.description} /> */}
+  const actions = actionsByDate.map((day, i) => {
+    const committeesWithActions = Array.from(new Set(day.actions.map(a => a.committee)));
+    if (committeesWithActions.length === 0) return null;
 
-      <h3>Leadership</h3>
-      <ChamberLeadership leadership={leadership} />
+    const displayCommittees = committeesWithActions.filter(d => d !== null).sort((a, b) => a - b);
+    const nonCommitteeActions = day.actions.filter(d => d.committee === null);
+    const governorActions = nonCommitteeActions.filter(d => d.posession === 'governor');
+    const houseActions = nonCommitteeActions.filter(d => d.posession === 'house');
+    const senateActions = nonCommitteeActions.filter(d => d.posession === 'senate');
 
-      <h3 id="members">Membership</h3>
-      <TruncatedContainer height={600} closedText="See full roster" openedText="See less">
-        <Roster chamberLabel="Senate" lawmakers={senators} />
-      </TruncatedContainer>
+    const governorActionTypes = Array.from(new Set(governorActions.map(d => d.description))).sort();
+    const houseActionTypes = Array.from(new Set(houseActions.map(d => d.description))).sort();
+    const senateActionTypes = Array.from(new Set(senateActions.map(d => d.description))).sort();
 
-      <NewsletterSignup />
+    return (
+      <div css={actionsDayStyle} key={day.date}>
+        <h2>📅 {shortDateWithWeekday(new Date(day.date))}</h2>
+        <div>
+          {governorActionTypes.length > 0 && (
+            <div>
+              <h3>🖋️ GOVERNOR</h3>
+              {governorActionTypes.map(description => {
+                const actionsOfType = governorActions.filter(d => d.description === description);
+                return (
+                  <div key={`governor-${description}`}>
+                    <h4>{description} ({actionsOfType.length})</h4>
+                    <ul>{actionsOfType.map(action => <Action key={action.id} data={action} />)}</ul>
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
-      <h3 id="committees">Senate Committees</h3>
-      {
-        committees.map(committee => {
-          const { name, key, members } = committee
-          return <div key={name} css={committeeItemStyle}>
-            <h4>👥 <Link to={`/committees/${key}/`}>{name}</Link> • {members.length} members</h4>
-            <CommitteeSummary {...committee} billCount={committee.bills.length} />
-          </div>
-        })
-      }
+          {houseActionTypes.length > 0 && (
+            <div>
+              <h3>🏛️ HOUSE</h3>
+              {houseActionTypes.map(description => {
+                const actionsOfType = houseActions.filter(d => d.description === description);
+                return (
+                  <div key={`house-${description}`}>
+                    <h4>{description} ({actionsOfType.length})</h4>
+                    <ul>{actionsOfType.map(action => <Action key={action.id} data={action} />)}</ul>
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
+          {senateActionTypes.length > 0 && (
+            <div>
+              <h3>🏛️ SENATE</h3>
+              {senateActionTypes.map(description => {
+                const actionsOfType = senateActions.filter(d => d.description === description);
+                return (
+                  <div key={`senate-${description}`}>
+                    <h4>{description} ({actionsOfType.length})</h4>
+                    <ul>{actionsOfType.map(action => <Action key={action.id} data={action} />)}</ul>
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
+          {displayCommittees.map(committee => {
+            const committeeActions = day.actions.filter(d => d.committee === committee);
+            const committeeActionTypes = Array.from(new Set(committeeActions.map(d => d.description))).sort();
+
+            return (
+              <div key={committee}>
+                <h3>👥 {committee}</h3>
+                {committeeActionTypes.map(description => {
+                  const actionsOfType = committeeActions.filter(d => d.description === description);
+                  return (
+                    <div key={`${committee}-${description}`}>
+                      <h4>{cleanDescription(description)} ({actionsOfType.length})</h4>
+                      <ul>{actionsOfType.map(action => <Action key={action.id} data={action} />)}</ul>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+        {i === 0 && <NewsletterSignup />}
+      </div>
+    );
+  });
+
+  return (
+    <Layout>
+      <h1>What lawmakers have done so far</h1>
+      <p>Procedural action on bills under consideration by the 2023 Legislature.</p>
+
+      {actions}
 
       <ContactUs />
-
     </Layout>
-  </div>
-}
+  );
+};
+
+export default Actions;
 
 export const Head = () => (
   <Seo
-    title="Senate"
-    description="Senators and committees of the Montana Senate"
-    pageRelativeUrl='senate/'
+    title="Recap"
+    description="Procedural action on bills under consideration by the 2023 Legislature."
+    pageRelativeUrl="recap/"
   />
-)
+);
 
-export const query = graphql`
-  query SenatePageQuery {
-    allLawmakersJson(
-      filter: {
-        chamber: {eq: "senate"},
-        isActive: {eq: true},
-      }
-      sort: {districtNum: ASC}
-      ) {
-        edges {
-          node {
-            ...RosterData
-          }
-        }
-    }
-    allCommitteesJson(filter: {
-        chamber: {eq: "senate"}
-      }) {
-      edges {
-        node {
-          name,
-          key,
-          chamber,
-          bills,
-          billsUnscheduled,
-          billsScheduled,
-          billsAwaitingVote,
-          billsAdvanced,
-          billsFailed,
-          # billsBlasted,
-          members {
-            name
-          }
-        }
-      }
-    }
-  }
-`
+const Action = ({ data }) => {
+  const { bill, title, explanation } = data;
+  const url = billUrl(bill);
 
-export default Senate
+  return (
+    <li>
+      <div>
+        📋 <Link href={`/bills/${url}`}><strong>{bill}</strong>: {title}</Link>
+      </div>
+      <div className="note">{explanation}</div>
+    </li>
+  );
+};
