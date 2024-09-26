@@ -1,5 +1,5 @@
-import BillCard from '../../components/BillCard';
-import bills from '../../data/bills.json';
+import BillCard from '../../components/bill/BillCard.js';
+import bills from '../../data-nodes/bills.json';
 
 export async function getStaticPaths() {
     const paths = bills.map(bill => ({
