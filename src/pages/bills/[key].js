@@ -1,4 +1,4 @@
-import BillCard from '../../components/bill/BillCard.js';
+import BillPage from '../../components/bill/BillPage';
 import bills from '../../data-nodes/bills.json';
 
 export async function getStaticPaths() {
@@ -15,14 +15,10 @@ export async function getStaticProps({ params }) {
     return { props: { bill } };
 }
 
-const BillPage = ({ bill }) => {
+const Bill = ({ bill }) => {
     if (!bill) return <div>Bill not found</div>;
 
-    return (
-        <div>
-            <BillCard bill={bill} />
-        </div>
-    );
+    return <BillPage bill={bill} />;
 };
 
-export default BillPage;
+export default Bill;

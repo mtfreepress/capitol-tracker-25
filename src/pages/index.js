@@ -63,18 +63,18 @@ const Index = ({ keyBills, billIndex, lawmakerIndex }) => {
 };
 
 export async function getStaticProps() {
-    const keyBills = require('../data-nodes/bills.json').filter(bill => bill.isMajorBill);
-    const billIndex = require('../data-nodes/bills.json'); 
-    const lawmakerIndex = require('../data-nodes/lawmakers.json').filter(lawmaker => lawmaker.isActive);
-  
-    return {
-      props: {
-        keyBills,
-        billIndex,
-        lawmakerIndex,
-      },
-    };
-  }
+  const keyBills = require('../data-nodes/bills.json').filter(bill => bill.isMajorBill);
+  const billIndex = require('../data-nodes/bills.json');
+  const lawmakerIndex = require('../data-nodes/lawmakers.json').filter(lawmaker => lawmaker.isActive);
+
+  return {
+    props: {
+      keyBills,
+      billIndex,
+      lawmakerIndex,
+    },
+  };
+}
 
 // TODO - Ask Eric if we need to have this or not
 // SEO - Isn't being used in gatsby so we prob don't need this. 
