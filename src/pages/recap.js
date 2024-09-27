@@ -4,8 +4,8 @@ import { css } from '@emotion/react';
 import { shortDateWithWeekday, billUrl } from '../config/utils';
 
 import Layout from '../components/Layout';
- // Could also use `next/head`
-import Seo from '../components/Seo';
+// Could also use `next/head`
+import Seo from '../components/SEO';
 import ContactUs from '../components/ContactUs';
 import NewsletterSignup from '../components/NewsletterSignup';
 

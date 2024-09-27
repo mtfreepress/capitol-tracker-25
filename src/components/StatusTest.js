@@ -1,27 +1,20 @@
-// General purpose table for displaying list of bills
-// e.g. bills a given lawmaker has sponsored
-// or key bills on index page
-// or bills at given point in process
-
-import React, { Component } from 'react';
-import PropTypes from "prop-types"
-
-import { css } from '@emotion/react'
-
-// import { AnchorLink } from "gatsby-plugin-anchor-links";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import Link from 'next/link';
+import { css } from '@emotion/react';
 
 import {
   statusColors,
-  partyColors
-} from '../config/config'
+  partyColors,
+} from '../config/config';
 
 import {
   billUrl,
-  lawmakerUrl
-} from '../config/utils'
+  lawmakerUrl,
+} from '../config/utils';
 import {
   tableStyle,
-  noteStyle
+  noteStyle,
 } from '../config/styles';
 
 const inlineButtonCss = css`
@@ -42,78 +35,49 @@ const inlineButtonCss = css`
     color: #ce5a00;
     text-decoration: underline;
   }
-`
+`;
 
-const DEFAULT_DISPLAY_LIMIT = 10
-const DEFAULT_SORT = (a, b) => +a.identifier.substring(3,) - +b.identifier.substring(3,)
-const defaultState = {
-  isTruncated: true
-}
+const DEFAULT_DISPLAY_LIMIT = 10;
+const DEFAULT_SORT = (a, b) => +a.identifier.substring(3,) - +b.identifier.substring(3,);
 
-class StatusTests extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { ...(props.defaultState || defaultState) }
+const StatusTests = ({ bills, suppressCount, sortFunction = DEFAULT_SORT, displayLimit = DEFAULT_DISPLAY_LIMIT }) => {
+  const [isTruncated, setIsTruncated] = useState(true);
 
-    this.toggleDisplayLimit = this.toggleDisplayLimit.bind(this)
+  if (bills.length === 0) {
+    return <div css={noteStyle}>None at present</div>;
   }
 
-  toggleDisplayLimit() {
-    this.setState({ isTruncated: !this.state.isTruncated })
-  }
+  const sorted = bills.sort(sortFunction);
+  const rendered = isTruncated ? sorted.slice(0, displayLimit) : sorted;
+  const rows = rendered.map((bill, i) => <Test key={String(i)} {...bill} />);
 
-  render() {
-    const { bills, suppressCount } = this.props
-    const sortFunction = this.props.sortFunction || DEFAULT_SORT
-    const { isTruncated } = this.state
-    const displayLimit = this.props.displayLimit || DEFAULT_DISPLAY_LIMIT
-
-    if (bills.length === 0) {
-      return <div css={noteStyle}>None at present</div>
-    }
-    const sorted = bills.sort(sortFunction)
-    const rendered = isTruncated ? sorted.slice(0, displayLimit) : sorted
-    const rows = rendered.map((bill, i) => <Test key={String(i)} {...bill} />)
-
-    return <div>
+  return (
+    <div>
       <table css={tableStyle}>
-        {/* <thead>
-          <tr>
-            <th>Bill</th>
-            <th>Status</th>
-          </tr>
-        </thead> */}
         <tbody>{rows}</tbody>
       </table>
       <div css={noteStyle}>
         {!suppressCount && <span>Showing {rendered.length} of {bills.length}</span>}
-        {
-          (bills.length > displayLimit) &&
-          <span><span>. </span>
-            <button css={inlineButtonCss} onClick={this.toggleDisplayLimit}>
+        {bills.length > displayLimit && (
+          <span>
+            <span>. </span>
+            <button css={inlineButtonCss} onClick={() => setIsTruncated(!isTruncated)}>
               {isTruncated ? 'See all.' : 'See fewer.'}
             </button>
           </span>
-        }
-
+        )}
       </div>
-
     </div>
+  );
+};
 
-  }
-
-}
 const tableRowCss = css`
-  /* background-color: #eae3da; */
   border-bottom: 2px solid #fff !important;
-  td {
-    /* padding: 0; */
-  }
-`
+`;
 
 const tableBillCell = css`
   padding: 0;
-`
+`;
 
 const statusColCss = css`
   width: 10em;
@@ -121,11 +85,13 @@ const statusColCss = css`
   @media screen and (max-width: 468px) {
     width: 7em;
   }
-`
+`;
+
 const billLabelCss = css`
   font-style: italic;
   color: #666;
-`
+`;
+
 const billCss = css`
   display: block;
   font-size: 1.15em;
@@ -133,7 +99,6 @@ const billCss = css`
   font-style: italic;
   padding: 0.2em 0.2em;
   margin-left: -0.2em;
-  /* background-color: #e0d4b8; */
   
   a {
     color: #473d29;
@@ -144,22 +109,18 @@ const billCss = css`
     color: #ce5a00 !important;
     text-decoration: none;
   }
-`
+`;
+
 const identifierCss = css`
   font-style: normal;
   color: #444;
+`;
 
-`
-const stepCss = css`
-`
-const labelCss = css`
-  font-style: italic;
-`
 const billInfoLineCss = css`
   color: #ae9864;
-`
+`;
+
 const billLinkCss = css`
-  /* opacity: 0.7; */
   margin-top: 0.3em;
   margin-right: 0.5em;
   display: inline-block;
@@ -168,47 +129,64 @@ const billLinkCss = css`
   padding: 0.2em 0.5em;
 
   :hover {
-    color:  #ce5a00;
-    border: 1px solid  #ce5a00;
+    color: #ce5a00;
+    border: 1px solid #ce5a00;
     text-decoration: none;
   }
-`
-const pluralStory = val => (val !== 1) ? 'stories' : 'story'
+`;
 
+const pluralStory = (val) => (val !== 1 ? 'stories' : 'story');
 
 const Test = ({ title, identifier, status, label, textUrl, fiscalNoteUrl, legalNoteUrl, numArticles, sponsor, progression }) => {
-  const color = statusColors(status.status)
-  return (<tr css={tableRowCss} key={identifier}>
-    <td css={tableBillCell}>
+  const color = statusColors(status.status);
 
-      <Link css={billCss} to={`/bills/${billUrl(identifier)}`}>
-        <span css={identifierCss}>{identifier}:</span> {title}
-      </Link>
-      <div css={billLabelCss}>{label}</div>
-      <div css={billInfoLineCss}>
-        {sponsor && <Link css={billLinkCss} to={`/lawmakers/${lawmakerUrl(sponsor.name)}`}>
-          From {sponsor.name} <span css={css`color: ${partyColors(sponsor.party)}; opacity: 0.8;`}>({sponsor.party})</span>
-        </Link>}
-        {textUrl && <a css={billLinkCss} href={textUrl} target="_blank" rel="noopener noreferrer">Bill text</a>}
-        {fiscalNoteUrl && <a css={billLinkCss} href={fiscalNoteUrl} target="_blank" rel="noopener noreferrer">Fiscal note</a>}
-        {legalNoteUrl && <a css={billLinkCss} href={legalNoteUrl} target="_blank" rel="noopener noreferrer">Legal note</a>}
-        {(numArticles > 0) && <Link css={billLinkCss} to={`/bills/${billUrl(identifier)}`}><strong>{numArticles}</strong> MTFP {pluralStory(numArticles)}</Link>}
-      </div>
+  return (
+    <tr css={tableRowCss} key={identifier}>
+      <td css={tableBillCell}>
+        <Link href={`/bills/${billUrl(identifier)}`}>
+          <a css={billCss}>
+            <span css={identifierCss}>{identifier}:</span> {title}
+          </a>
+        </Link>
+        <div css={billLabelCss}>{label}</div>
+        <div css={billInfoLineCss}>
+          {sponsor && (
+            <Link href={`/lawmakers/${lawmakerUrl(sponsor.name)}`}>
+              <a css={billLinkCss}>
+                From {sponsor.name} <span css={css`color: ${partyColors(sponsor.party)}; opacity: 0.8;`}>({sponsor.party})</span>
+              </a>
+            </Link>
+          )}
+          {textUrl && <a css={billLinkCss} href={textUrl} target="_blank" rel="noopener noreferrer">Bill text</a>}
+          {fiscalNoteUrl && <a css={billLinkCss} href={fiscalNoteUrl} target="_blank" rel="noopener noreferrer">Fiscal note</a>}
+          {legalNoteUrl && <a css={billLinkCss} href={legalNoteUrl} target="_blank" rel="noopener noreferrer">Legal note</a>}
+          {numArticles > 0 && (
+            <Link href={`/bills/${billUrl(identifier)}`}>
+              <a css={billLinkCss}><strong>{numArticles}</strong> MTFP {pluralStory(numArticles)}</a>
+            </Link>
+          )}
+        </div>
+      </td>
+      <td css={[statusColCss, css`background-color: ${color};`]}>
+        <div>{status.step}</div>
+        <div>{status.label}</div>
+      </td>
+      <td css={css`width: 400px;`}>
+        <div>Introduction: {progression.dates.introduction || 'none'}</div>
+        <div>Initial hearing: {progression.dates.initialHearing || 'none'} {progression.status.firstCommitteeName}</div>
+        <div>Committee vote: {progression.dates.firstCommitteeVote || 'none'} {progression.status.firstCommitteeAction}</div>
+        <div>2nd Reading: {progression.dates.firstChamberSecondReading || 'none'} {progression.status.firstChamberSecondReading}</div>
+        <div>3rd Reading: {progression.dates.firstChamberThirdReading || 'none'} {progression.status.firstChamberThirdReading}</div>
+      </td>
+    </tr>
+  );
+};
 
-    </td>
-    <td css={[statusColCss, css`background-color: ${color}`]}>
-      <div css={stepCss}>{status.step}</div>
-      <div css={labelCss}>{status.label}</div>
-    </td>
-    <td css={css`width: 400px;`}>
-      <div>Introduction: {progression.dates.introduction || 'none'}</div>
-      <div>Initial hearing: {progression.dates.initialHearing || 'none'} {progression.status.firstCommitteeName}</div>
-      <div>Committee vote: {progression.dates.firstCommitteeVote || 'none'} {progression.status.firstCommitteeAction}</div>
-      <div>2nd Reading: {progression.dates.firstChamberSecondReading || 'none'} {progression.status.firstChamberSecondReading}</div>
-      <div>3rd Reading: {progression.dates.firstChamberThirdReading || 'none'} {progression.status.firstChamberThirdReading}</div>
-    </td>
+StatusTests.propTypes = {
+  bills: PropTypes.arrayOf(PropTypes.object).isRequired,
+  suppressCount: PropTypes.bool,
+  sortFunction: PropTypes.func,
+  displayLimit: PropTypes.number,
+};
 
-  </tr>)
-}
-
-export default StatusTests
+export default StatusTests;

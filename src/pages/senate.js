@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { shortDateWithWeekday, billUrl } from '../config/utils';
 
 import Layout from '../components/Layout';
-import Seo from '../components/Seo';
+import Seo from '../components/SEO';
 import ContactUs from '../components/ContactUs';
 import NewsletterSignup from '../components/NewsletterSignup';
 

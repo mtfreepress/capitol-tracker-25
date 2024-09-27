@@ -1,7 +1,8 @@
-import React from "react"
-import { css } from '@emotion/react'
+import React from "react";
+import { css } from '@emotion/react';
+import Link from 'next/link';
 
-import logo from "../images/mtfp-logo.png"
+import logo from "../images/mtfp-logo.png";
 
 const containerCss = css`
     display: inline-block;
@@ -14,23 +15,24 @@ const containerCss = css`
     a {
         color: #AE9864;
     }
-    
-`
+`;
+
 const imgCss = css`
     position: relative;
     top: 5px;
     margin: 0 5px;
 
     :hover {
-      opacity: 0.7;
+        opacity: 0.7;
     }
-`
+`;
 
 const MTFPLogo = (props) => (
-  <div css={containerCss}>
-    <a href="https://montanafreepress.org">
-      <img src={logo} alt="MTFP logo" width={50} css={imgCss} />
-    </a>
-  </div>
-)
-export default MTFPLogo
+    <div css={containerCss}>
+        <Link href="https://montanafreepress.org" passHref>
+            <img src={logo} alt="MTFP logo" width={50} css={imgCss} />
+        </Link>
+    </div>
+);
+
+export default MTFPLogo;

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { css } from "@emotion/react";
 
 import Layout from '../../components/Layout';
-import Seo from '../../components/Seo';
+import Seo from '../../components/SEO';
 
 import { dateFormat } from '../../config/utils.js';
 import bills from '../../data-nodes/bills.json';
@@ -33,7 +33,7 @@ const AllBillsProgress = () => {
                 <div>{STEP_ICONS[step.status]} {step.statusDate && dateFormat(new Date(step.statusDate))}</div>
             </td>
         ));
-        
+
         return (
             <tr key={bill.key}>
                 <td><Link href={`/bills/${bill.key}`} passHref>{bill.identifier}</Link></td>

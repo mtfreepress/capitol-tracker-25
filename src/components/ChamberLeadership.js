@@ -1,5 +1,5 @@
 import React from "react"
-import { Link } from 'gatsby'
+import Link from 'next/link'
 import { css } from '@emotion/react'
 
 const leadershipCss = css`
@@ -19,19 +19,24 @@ const roleCss = css`
 const nameCss = css`
   color: #444;
 `
+
 const ChamberLeadership = ({ leadership }) => {
-  return <div>
-    <div css={leadershipCss}>
-      {
-        leadership.map((d, i) => {
-          return <div key={d.name} css={leadershipItemCss}>
+  return (
+    <div>
+      <div css={leadershipCss}>
+        {leadership.map((d) => (
+          <div key={d.name} css={leadershipItemCss}>
             <div css={roleCss}>{d.role}</div>
-            <div css={nameCss}><Link to={`/lawmakers/${d.key}`}>{d.name}</Link></div>
+            <div css={nameCss}>
+              <Link href={`/lawmakers/${d.key}`}>
+                <a>{d.name}</a>
+              </Link>
+            </div>
           </div>
-        })
-      }
+        ))}
+      </div>
     </div>
-  </div>
+  )
 }
 
 export default ChamberLeadership
