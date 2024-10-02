@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import React from "react";
 import Link from 'next/link';
 import { css } from '@emotion/react';
@@ -10,7 +11,7 @@ const leadershipCss = css`
 `;
 
 const leadershipItemCss = css`
-  flex-grow: 1 0 200px;
+  flex: 1 0 200px; /* Changed from flex-grow to flex for proper flex behavior */
   margin: 0.5em;
 `;
 
@@ -28,7 +29,7 @@ const ChamberLeadership = ({ leadership }) => {
     <div>
       <div css={leadershipCss}>
         {leadership.map((d) => (
-          <div key={d.name} css={leadershipItemCss}>
+          <div key={d.key} css={leadershipItemCss}> {/* Changed key to d.key */}
             <div css={roleCss}>{d.role}</div>
             <div css={nameCss}>
               <Link href={`/lawmakers/${d.key}`}>

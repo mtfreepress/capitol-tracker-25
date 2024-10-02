@@ -1,19 +1,22 @@
+/** @jsxImportSource @emotion/react */
 import React from "react";
 import { css } from '@emotion/react';
+
 import Link from 'next/link';
 
 import MTFPLogo from './MTFPLogo';
 import headerData from '../data/header.json';
 import { formatTimeLong } from '../config/utils';
 
-import headerBackground from "../images/cap-tracker-background.png";
+import headerBackground from "../images/cap-tracker-background.png"; // Image import
 
-const title = '2023 Capitol Tracker';
-const subtitle = 'The lawmakers, bills and votes of the 68th Montana Legislature';
+const title = '2025 Capitol Tracker';
+const subtitle = 'The lawmakers, bills and votes of the 69th Montana Legislature'; 
 const headerDonateLink = "https://checkout.fundjournalism.org/memberform?org_id=montanafreepress&campaign=7014o000000JNaKAAW";
 
 const headerStyle = css`
   background-color: var(--tan7);
+  background-image: linear-gradient(rgba(23, 24, 24, 0.2), rgba(23, 24, 24, 0.5)), url(${headerBackground.src});
   background-size: cover;
   background-position: center;
   margin-bottom: 10px;
@@ -66,10 +69,9 @@ const updateCss = css`
 
 const Header = () => {
     const { updateTime } = headerData;
+
     return (
-        <div css={headerStyle} style={{
-            backgroundImage: `linear-gradient( rgba(23, 24, 24, 0.2), rgba(23, 24, 24, 0.5) ), url(${headerBackground})`
-        }}>
+        <div css={headerStyle}>
             <h1 css={titleStyle}>
                 <Link href="/">{title}</Link>
             </h1>

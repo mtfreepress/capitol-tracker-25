@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import fs from 'fs'
 import path from 'path'
 import React from 'react'
