@@ -1,50 +1,33 @@
-/**
- * SEO component that queries for data with
- *  Gatsby's useStaticQuery React hook
- *
- * See: https://www.gatsbyjs.org/docs/use-static-query/
- */
+import React from 'react';
+import Head from 'next/head';
+import PropTypes from 'prop-types';
 
-import React from "react"
-import PropTypes from "prop-types"
-// import { Helmet } from "react-helmet"
-import { useStaticQuery, graphql } from "gatsby"
+const SEO = ({ title, description, pageRelativeUrl, image }) => {
+  // TODO: Make sure this is still current.
+  const siteMetadata = {
+    title: 'Montana Free Press',
+    description: 'In-depth news from across the state of Montana',
+    author: 'Jacob Olness',
+    // TODO: What is our default image?
+    image: '/default-image.png',
+    siteUrl: 'https://montanafreepress.org',
+    twitterUsername: '@mtfreepress',
+  };
 
-function SEO({
-  title,
-  description,
-  pageRelativeUrl,
-  image,
-}) {
-  const { site } = useStaticQuery(
-    graphql`
-      query {
-        site {
-          siteMetadata {
-            title
-            description
-            author
-            image
-            siteUrl
-          }
-        }
-      }
-    `
-  )
-
-  const metaDescription = description || site.siteMetadata.description
-  const metaImage = image || site.siteMetadata.image
-  const metaTitle = title ? `${title} | ${site.siteMetadata.title}` : site.siteMetadata.title
-  const metaUrl = `${site.siteMetadata.siteUrl}/${pageRelativeUrl}`
+  const metaDescription = description || siteMetadata.description;
+  const metaImage = image || siteMetadata.image;
+  const metaTitle = title ? `${title} | ${siteMetadata.title}` : siteMetadata.title;
+  const metaUrl = `${siteMetadata.siteUrl}/${pageRelativeUrl || ''}`;
 
   return (
-    <>
+    <Head>
       <meta charSet="utf-8" />
       <title>{metaTitle}</title>
       <meta name="description" content={metaDescription} />
       <meta name="image" content={metaImage} />
       <link rel="canonical" href={metaUrl} />
-      {/* OpenGraph / FB */}
+
+      {/* OpenGraph / Facebook */}
       <meta property="og:url" content={metaUrl} />
       <meta property="og:locale" content="en_US" />
       <meta property="og:site_name" content="Montana Free Press" />
@@ -53,12 +36,14 @@ function SEO({
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:type" content="website" />
+
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:creator" content="@mtfreepress" />
+      <meta name="twitter:creator" content={siteMetadata.twitterUsername} />
       <meta name="twitter:title" content={metaTitle} />
       <meta name="twitter:image" content={metaImage} />
       <meta name="twitter:description" content={metaDescription} />
+
       {/* Google Analytics */}
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-179R4DKQFZ"></script>
       <script>
@@ -66,10 +51,10 @@ function SEO({
         window.dataLayer = window.dataLayer || [];
         function gtag(){window.dataLayer.push(arguments);}
         gtag('js', new Date());
-
         gtag('config', 'G-179R4DKQFZ');
       `}
       </script>
+
       {/* Parsely information */}
       <script type="application/ld+json">
         {`
@@ -85,21 +70,21 @@ function SEO({
           }
         `}
       </script>
-    </>
-  )
-}
+    </Head>
+  );
+};
 
 SEO.defaultProps = {
-  lang: `en`,
-  meta: [],
-  description: ``,
-}
+  description: '',
+  image: '',
+  pageRelativeUrl: '',
+};
 
 SEO.propTypes = {
-  description: PropTypes.string,
-  lang: PropTypes.string,
-  meta: PropTypes.arrayOf(PropTypes.object),
   title: PropTypes.string.isRequired,
-}
+  description: PropTypes.string,
+  image: PropTypes.string,
+  pageRelativeUrl: PropTypes.string,
+};
 
-export default SEO
+export default SEO;

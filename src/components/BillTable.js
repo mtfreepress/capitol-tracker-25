@@ -1,62 +1,48 @@
-import React, { Component } from 'react';
-import PropTypes from "prop-types";
+import React, { useState } from 'react';
 import { css } from '@emotion/react';
+import Link from 'next/link';
 import { billStatusSymbols, billProgressStepLabels, statusColors, partyColors } from '../config/config';
 import { billUrl, lawmakerUrl } from '../config/utils';
 import { tableStyle, noteStyle, bottomFadeCss, inlineButtonCss } from '../config/styles';
 
 const DEFAULT_DISPLAY_LIMIT = 10;
 const DEFAULT_SORT = (a, b) => +a.identifier.substring(3) - +b.identifier.substring(3);
-const defaultState = {
-  isTruncated: true
-};
 
-class BillTable extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { ...(props.defaultState || defaultState) };
-    this.toggleDisplayLimit = this.toggleDisplayLimit.bind(this);
+const BillTable = ({ bills, suppressCount, sortFunction = DEFAULT_SORT, displayLimit = DEFAULT_DISPLAY_LIMIT }) => {
+  const [isTruncated, setIsTruncated] = useState(true);
+
+  const toggleDisplayLimit = () => {
+    setIsTruncated(!isTruncated);
+  };
+
+  if (bills.length === 0) {
+    return <div css={noteStyle}>None at present</div>;
   }
 
-  toggleDisplayLimit() {
-    this.setState({ isTruncated: !this.state.isTruncated });
-  }
+  const sorted = bills.sort(sortFunction);
+  const rendered = isTruncated ? sorted.slice(0, displayLimit) : sorted;
+  const rows = rendered.map((bill, i) => <Bill key={String(i)} {...bill} />);
+  const isFadeApplied = isTruncated && (rendered.length < sorted.length);
 
-  render() {
-    const { bills, suppressCount } = this.props;
-    const sortFunction = this.props.sortFunction || DEFAULT_SORT;
-    const { isTruncated } = this.state;
-    const displayLimit = this.props.displayLimit || DEFAULT_DISPLAY_LIMIT;
-
-    if (bills.length === 0) {
-      return <div css={noteStyle}>None at present</div>;
-    }
-
-    const sorted = bills.sort(sortFunction);
-    const rendered = isTruncated ? sorted.slice(0, displayLimit) : sorted;
-    const rows = rendered.map((bill, i) => <Bill key={String(i)} {...bill} />);
-    const isFadeApplied = isTruncated && (rendered.length < sorted.length);
-
-    return (
-      <div>
-        <table css={isFadeApplied ? [tableStyle, bottomFadeCss] : [tableStyle]}>
-          <tbody>{rows}</tbody>
-        </table>
-        <div css={noteStyle}>
-          {!suppressCount && <span>Showing {rendered.length} of {bills.length}</span>}
-          {(bills.length > displayLimit) && (
-            <span>
-              <span>. </span>
-              <button css={inlineButtonCss} onClick={this.toggleDisplayLimit}>
-                {isTruncated ? 'See all' : 'See fewer'}
-              </button>
-            </span>
-          )}
-        </div>
+  return (
+    <div>
+      <table css={isFadeApplied ? [tableStyle, bottomFadeCss] : [tableStyle]}>
+        <tbody>{rows}</tbody>
+      </table>
+      <div css={noteStyle}>
+        {!suppressCount && <span>Showing {rendered.length} of {bills.length}</span>}
+        {(bills.length > displayLimit) && (
+          <span>
+            <span>. </span>
+            <button css={inlineButtonCss} onClick={toggleDisplayLimit}>
+              {isTruncated ? 'See all' : 'See fewer'}
+            </button>
+          </span>
+        )}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 const tableRowCss = css`
   border-bottom: 2px solid #fff !important;
@@ -89,10 +75,6 @@ const billCss = css`
   font-style: italic;
   padding: 0.2em 0.2em;
   margin-left: -0.2em;
-
-  a {
-    color: #473d29;
-  }
 
   :hover {
     background-color: #cebc9f;
@@ -150,10 +132,7 @@ const progressStepStyle = css`
 
 const pluralStory = val => (val !== 1) ? 'stories' : 'story';
 
-const Bill = ({ title, identifier, chamber, status, explanation, textUrl,
-  fiscalNoteUrl, legalNoteUrl, vetoMemoUrl, amendmentsUrl,
-  numArticles, sponsor, progress }) => {
-  
+const Bill = ({ title, identifier, chamber, status, explanation, textUrl, fiscalNoteUrl, legalNoteUrl, vetoMemoUrl, amendmentsUrl, numArticles, sponsor, progress }) => {
   const statusColor = statusColors(status.status);
   const stepLabels = billProgressStepLabels(chamber);
 
@@ -176,14 +155,18 @@ const Bill = ({ title, identifier, chamber, status, explanation, textUrl,
   return (
     <tr css={tableRowCss} key={identifier}>
       <td css={tableBillCell}>
-        <Link css={billCss} to={`/bills/${billUrl(identifier)}`}>
-          <span>📋</span> <span css={identifierCss}>{identifier}:</span> {title}
+        <Link href={`/bills/${billUrl(identifier)}`} passHref>
+          <span css={billCss}>
+            <span>📋</span> <span css={identifierCss}>{identifier}:</span> {title}
+          </span>
         </Link>
         <div css={billLabelCss}>{explanation}</div>
         <div css={billInfoLineCss}>
           {sponsor && (
-            <Link css={billLinkCss} to={`/lawmakers/${lawmakerUrl(sponsor.name)}`}>
-              {sponsor.name} <span css={css`color: ${partyColors(sponsor.party)}; opacity: 0.8;`}>({sponsor.party})</span>
+            <Link href={`/lawmakers/${lawmakerUrl(sponsor.name)}`} passHref>
+              <span css={billLinkCss}>
+                {sponsor.name} <span css={css`color: ${partyColors(sponsor.party)}; opacity: 0.8;`}>({sponsor.party})</span>
+              </span>
             </Link>
           )}
           {textUrl && <a css={billLinkCss} href={textUrl} target="_blank" rel="noopener noreferrer">📃 Bill text</a>}
@@ -191,7 +174,11 @@ const Bill = ({ title, identifier, chamber, status, explanation, textUrl,
           {legalNoteUrl && <a css={billLinkCss} href={legalNoteUrl} target="_blank" rel="noopener noreferrer">🏛 Legal note</a>}
           {amendmentsUrl && <a css={billLinkCss} href={amendmentsUrl} target="_blank" rel="noopener noreferrer">🖍 Proposed amendments</a>}
           {vetoMemoUrl && <a css={billLinkCss} href={vetoMemoUrl} target="_blank" rel="noopener noreferrer">🚫 Veto memo</a>}
-          {(numArticles > 0) && <Link css={billLinkCss} to={`/bills/${billUrl(identifier)}`}>📰 <strong>{numArticles}</strong> MTFP {pluralStory(numArticles)}</Link>}
+          {(numArticles > 0) && (
+            <Link href={`/bills/${billUrl(identifier)}`} passHref>
+              <span css={billLinkCss}>📰 <strong>{numArticles}</strong> MTFP {pluralStory(numArticles)}</span>
+            </Link>
+          )}
         </div>
       </td>
       <td css={[statusColCss, css`border-left: 3px solid ${statusColor}`]}>
@@ -201,44 +188,4 @@ const Bill = ({ title, identifier, chamber, status, explanation, textUrl,
   );
 };
 
-Bill.propTypes = {
-  title: PropTypes.string.isRequired,
-  identifier: PropTypes.string.isRequired,
-  status: PropTypes.object.isRequired,
-};
-
 export default BillTable;
-
-export const BillTableDataFragment = graphql`
-  fragment BillTableData on BillsJson {
-    title
-    identifier
-    chamber
-    status {
-      key
-      step
-      label
-      status
-    }
-    progress {
-      step
-      status
-      statusLabel
-      statusDate
-    }
-    explanation
-    majorBillCategory
-    tags
-    textUrl
-    fiscalNoteUrl
-    legalNoteUrl
-    amendmentsUrl
-    vetoMemoUrl
-    numArticles
-    sponsor {
-      name
-      district
-      party
-    }
-  }
-`;

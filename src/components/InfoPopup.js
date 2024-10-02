@@ -48,11 +48,12 @@ const tipWrapperCss = css`
         margin-bottom: 0.5em;
     }
 `
+
 const isActiveCss = css`
     border: 1px solid #222;
 `
-const tipCss = css`
 
+const tipCss = css`
     position: absolute;
     /* border-radius: 4px; */
     left: 50%;
@@ -85,7 +86,6 @@ const tipCss = css`
         }
     }
 
-
     /* CSS border triangles */
     :before {
         content: " ";
@@ -99,6 +99,7 @@ const tipCss = css`
         margin-left: -6px;
     }
 `
+
 const bottomCss = css`
     top: 40px;
 
@@ -108,31 +109,24 @@ const bottomCss = css`
     }
 `
 
-
 const InfoPopup = ({ label, content }) => {
     const [active, setActive] = useState(false)
 
     const toggleTip = () => {
-        setActive(!active)
+        setActive(prev => !prev)
     }
 
-
-    return <div css={[tipWrapperCss, active ? isActiveCss : null]}
-        onClick={toggleTip}
-    >
-
-        {questionMarkSvg}
-        <em>{label}</em>
-        {
-            (active) && (
+    return (
+        <div css={[tipWrapperCss, active && isActiveCss]} onClick={toggleTip}>
+            {questionMarkSvg}
+            <em>{label}</em>
+            {active && (
                 <div css={[tipCss, bottomCss]}>
                     <ReactMarkdown>{content}</ReactMarkdown>
                 </div>
-            )
-        }
-    </div>
+            )}
+        </div>
+    )
 }
-
-
 
 export default InfoPopup

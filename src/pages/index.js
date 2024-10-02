@@ -24,9 +24,7 @@ const Index = ({ keyBills, billIndex, lawmakerIndex }) => {
           {keyBillCategories.sort((a, b) => a.order - b.order).map((c, i) => (
             <span key={c.category}>
               {i !== 0 ? ' • ' : ''}
-              <Link href={`/#${urlize(c.category)}`}>
-                <a>{c.category}</a>
-              </Link>
+              <Link href={`/#${urlize(c.category)}`}>{c.category}</Link>
             </span>
           ))}
         </div>

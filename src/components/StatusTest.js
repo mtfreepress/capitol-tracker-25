@@ -99,10 +99,6 @@ const billCss = css`
   font-style: italic;
   padding: 0.2em 0.2em;
   margin-left: -0.2em;
-  
-  a {
-    color: #473d29;
-  }
 
   :hover {
     background-color: #cebc9f;
@@ -143,26 +139,26 @@ const Test = ({ title, identifier, status, label, textUrl, fiscalNoteUrl, legalN
   return (
     <tr css={tableRowCss} key={identifier}>
       <td css={tableBillCell}>
-        <Link href={`/bills/${billUrl(identifier)}`}>
-          <a css={billCss}>
+        <Link href={`/bills/${billUrl(identifier)}`} passHref>
+          <span css={billCss}>
             <span css={identifierCss}>{identifier}:</span> {title}
-          </a>
+          </span>
         </Link>
         <div css={billLabelCss}>{label}</div>
         <div css={billInfoLineCss}>
           {sponsor && (
-            <Link href={`/lawmakers/${lawmakerUrl(sponsor.name)}`}>
-              <a css={billLinkCss}>
+            <Link href={`/lawmakers/${lawmakerUrl(sponsor.name)}`} passHref>
+              <span css={billLinkCss}>
                 From {sponsor.name} <span css={css`color: ${partyColors(sponsor.party)}; opacity: 0.8;`}>({sponsor.party})</span>
-              </a>
+              </span>
             </Link>
           )}
           {textUrl && <a css={billLinkCss} href={textUrl} target="_blank" rel="noopener noreferrer">Bill text</a>}
           {fiscalNoteUrl && <a css={billLinkCss} href={fiscalNoteUrl} target="_blank" rel="noopener noreferrer">Fiscal note</a>}
           {legalNoteUrl && <a css={billLinkCss} href={legalNoteUrl} target="_blank" rel="noopener noreferrer">Legal note</a>}
           {numArticles > 0 && (
-            <Link href={`/bills/${billUrl(identifier)}`}>
-              <a css={billLinkCss}><strong>{numArticles}</strong> MTFP {pluralStory(numArticles)}</a>
+            <Link href={`/bills/${billUrl(identifier)}`} passHref>
+              <span css={billLinkCss}><strong>{numArticles}</strong> MTFP {pluralStory(numArticles)}</span>
             </Link>
           )}
         </div>
