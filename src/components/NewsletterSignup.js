@@ -1,7 +1,7 @@
-/** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/react'
 
+import Image from 'next/image';
 import wideCapitolizedLogo from "../images/Capitolized400x147.png"
 
 const style = css`
@@ -76,7 +76,7 @@ const NewsletterSignup = props => {
     return <div css={style}>
         <div className="row">
             <div className="img-col">
-                <img src={wideCapitolizedLogo} alt="Capitolized newsletter" css={imgCss} />
+                <Image src={wideCapitolizedLogo} alt="Capitolized newsletter" css={imgCss} layout="responsive" />
             </div>
             <div className="words-col">
                 <div className="message">Sign up for CAPITOLIZED</div>

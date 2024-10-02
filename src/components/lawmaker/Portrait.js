@@ -1,42 +1,21 @@
-import React from "react"
-import { css } from "@emotion/react"
+import React from 'react';
+import Image from 'next/image';
 
-// TODO - Rewrite this so it doesn't use gatsby
-
-const Portrait = (props) => {
-  const data = useStaticQuery(graphql`
-        query {
-          defaultImage: file(sourceInstanceName: {eq: "portraits"}, relativePath: {eq: "00-placeholder.png"}) {
-              relativePath
-              name
-              childImageSharp {
-                gatsbyImageData
-              }
-          }
-        }
-      `)
-  const { image, alt, barColor, suppresswarning, width } = props
-  const maxWidth = width || 150
-  const barStyle = barColor ?
-    css`border-top: 8px solid ${barColor};`
-    : null
-
-  let renderImage = image
-
-  if (!image) {
-    if (!suppresswarning) console.warn('Missing portrait:', alt)
-    renderImage = data.defaultImage
-  }
+const Portrait = ({ image, alt, width }) => {
+  const maxWidth = width || 150;
+  
   return (
-    <div css={[barStyle]} style={{ maxWidth: `${maxWidth}px` }}>
-      {/* <GatsbyImage */}
-        image={renderImage.childImageSharp.gatsbyImageData}
+    <div style={{ maxWidth: `${maxWidth}px` }}>
+      <Image
+        src={image} 
         alt={alt}
+        width={maxWidth}
+        height={maxWidth}
         objectFit="cover"
         objectPosition="50% 50%"
-      {/* /> */}
+      />
     </div>
   );
-}
+};
 
-export default Portrait
+export default Portrait;

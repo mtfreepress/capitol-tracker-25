@@ -1,8 +1,8 @@
-/** @jsxImportSource @emotion/react */
 import React from "react";
 import { css } from '@emotion/react';
 import Link from 'next/link';
 
+import Image from 'next/image'; // Import Next.js Image component
 import logo from "../images/mtfp-logo.png";
 
 const containerCss = css`
@@ -31,7 +31,7 @@ const imgCss = css`
 const MTFPLogo = (props) => (
     <div css={containerCss}>
         <Link href="https://montanafreepress.org" passHref>
-            <img src={logo} alt="MTFP logo" width={50} css={imgCss} />
+            <Image src={logo} alt="MTFP logo" width={50} css={imgCss} />
         </Link>
     </div>
 );

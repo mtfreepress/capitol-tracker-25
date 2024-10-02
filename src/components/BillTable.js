@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import React, { useState } from 'react';
 import { css } from '@emotion/react';
 import Link from 'next/link';

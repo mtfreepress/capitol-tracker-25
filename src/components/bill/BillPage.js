@@ -1,78 +1,71 @@
 import React from "react";
-import ReactMarkdown from 'react-markdown'
-// import PropTypes from 'prop-types'
+import ReactMarkdown from 'react-markdown';
 
+import Layout from '../Layout';
+import Seo from "../SEO";
+import ContactUs from '../ContactUs';
+import LinksList from '../LinksList';
+import NewsletterSignup from '../NewsletterSignup';
 
-import Layout from '../components/Layout'
-import Seo from "../components/Seo"
-import ContactUs from '../components/ContactUs'
-import LinksList from '../components/LinksList'
-import NewsletterSignup from '../components/NewsletterSignup'
+import BillStatus from '../bill/Status';
+import BillInfo from '../bill/Info';
+import BillActions from '../bill/Actions';
 
-import BillStatus from '../components/bill/Status'
-import BillInfo from '../components/bill/Info'
-import BillActions from '../components/bill/Actions'
-
-const BillPage = ({ pageContext, location }) => {
+const BillPage = ({ bill }) => {
   const {
-    bill,
-  } = pageContext
-  const {
-    // key, 
     identifier, title, status, progress, chamber,
     lawsUrl, vetoMemoUrl, articles, actions,
     explanation, type,
-    billPageText,
-    // isMajorBill
-  } = bill
-  return <div>
+    billPageText
+  } = bill;
 
-    <Layout location={location}>
-      <h1>{identifier}: {title}</h1>
-      <div>{explanation}</div>
+  return (
+    <div>
+      <Layout>
+        <h1>{identifier}: {title}</h1>
+        <div>{explanation}</div>
 
-      <BillStatus
-        identifier={identifier}
-        chamber={chamber}
-        type={type}
-        status={status}
-        progress={progress}
-      />
+        <BillStatus
+          identifier={identifier}
+          chamber={chamber}
+          type={type}
+          status={status}
+          progress={progress}
+        />
 
-      <hr />
+        <hr />
 
-      <BillInfo bill={bill} />
+        <BillInfo bill={bill} />
 
-      {/* <div>TODO: Implement interpretation of bill type (type: {type})</div> */}
+        <ReactMarkdown>{billPageText}</ReactMarkdown>
 
-      {/* {isMajorBill && <div>*Identified by MTFP as one of the session's key bills.</div>} */}
+        {articles.length > 0 && (
+          <div>
+            <h3 id="mtfp-articles">Montana Free Press coverage</h3>
+            <div>MTFP stories involving the bill</div>
+            <LinksList articles={articles} />
+          </div>
+        )}
 
-      <ReactMarkdown>{billPageText}</ReactMarkdown>
+        <NewsletterSignup />
 
-      {
-        (articles.length > 0) && <div>
-          <h3 id="mtfp-articles">Montana Free Press coverage</h3>
-          <div>MTFP stories involving the bill</div>
-          <LinksList articles={articles} />
-        </div>
-      }
+        <BillActions actions={actions} lawsUrl={lawsUrl} vetoMemoUrl={vetoMemoUrl} />
 
-      <NewsletterSignup />
-
-      <BillActions actions={actions} lawsUrl={lawsUrl} vetoMemoUrl={vetoMemoUrl} />
-
-      <ContactUs />
-    </Layout>
-  </div>;
+        <ContactUs />
+      </Layout>
+    </div>
+  );
 };
 
-export const Head = ({ pageContext }) => {
-  const { key, identifier, title } = pageContext.bill
-  return <Seo
-    title={`${identifier}: ${title}`}
-    description={`Bill details, sponsor, text, procedural status and more for ${identifier}: ${title}.`}
-    pageRelativeUrl={`bills/${key}/`}
-  />
-}
+export const Head = ({ bill }) => {
+  const { key, identifier, title } = bill;
+  return (
+    <Seo
+      title={`${identifier}: ${title}`}
+      description={`Bill details, sponsor, text, procedural status and more for ${identifier}: ${title}.`}
+      pageRelativeUrl={`bills/${key}/`}
+    />
+  );
+};
 
 export default BillPage;
