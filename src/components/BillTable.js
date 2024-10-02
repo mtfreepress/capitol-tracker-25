@@ -21,7 +21,10 @@ const BillTable = ({ bills, suppressCount, sortFunction = DEFAULT_SORT, displayL
 
   const sorted = bills.sort(sortFunction);
   const rendered = isTruncated ? sorted.slice(0, displayLimit) : sorted;
-  const rows = rendered.map((bill, i) => <Bill key={String(i)} {...bill} />);
+  const rows = rendered.map((bill, i) => {
+    const { key, ...rest } = bill;
+    return <Bill key={String(i)} {...rest} />;
+  });
   const isFadeApplied = isTruncated && (rendered.length < sorted.length);
 
   return (
