@@ -5,7 +5,7 @@ import Layout from '../components/Layout';
 import NewsletterSignup from "../components/NewsletterSignup";
 import ContactUs from "../components/ContactUs";
 import participationData from '../data/participation.json';
-import Head from 'next/head';  
+import Head from 'next/head';
 const Participate = () => {
     const { text } = participationData;
     return (

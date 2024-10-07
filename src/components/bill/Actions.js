@@ -112,7 +112,12 @@ const BillActions = ({ actions, lawsUrl, vetoMemoUrl }) => {
     },
   ];
 
-  const rows = actions.filter(actionFilter).map((d, i) => Action(d, showVotes, annotations));
+  // TODO: Remove the conditional that allows for null values, workaround for getting the page to render for now
+  const rows = actions ? actions.filter(actionFilter).map((d, i) => Action(d, showVotes, annotations)) : [];
+
+  // TODO: Use this code instead
+  // const rows = actions.filter(actionFilter).map((d, i) => Action(d, showVotes, annotations));
+
 
   return (
     <div>

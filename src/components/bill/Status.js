@@ -48,6 +48,7 @@ const progressionBinsStyle = css`
             93% 0,
             100% 50%,
             93% 100%
+            0% 100%
         );
     }
     .step:last-of-type {

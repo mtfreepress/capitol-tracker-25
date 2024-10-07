@@ -15,32 +15,60 @@ const plural = (value) => (value !== 1 ? 's' : '');
 const Governor = ({ bills }) => {
   const { text, articles } = governorData;
 
-// filter functions
-// const toGovernor = d => d.data.progress.toGovernor
-// const awaitingGovernorAction = d => d.progress.governorStatus === 'pending'
-// const signedByGovernor = d => d.progress.governorStatus === 'signed'
-// const vetoedByGovernor = d => d.progress.governorStatus === 'vetoed'
-// const enactedWithNoGovernorSignature = d => d.progress.governorStatus === 'became law unsigned'
+  // filter functions
+  // const toGovernor = d => d.data.progress.toGovernor
+  // const awaitingGovernorAction = d => d.progress.governorStatus === 'pending'
+  // const signedByGovernor = d => d.progress.governorStatus === 'signed'
+  // const vetoedByGovernor = d => d.progress.governorStatus === 'vetoed'
+  // const enactedWithNoGovernorSignature = d => d.progress.governorStatus === 'became law unsigned'
 
 
-  // Filter bills based on status
-  const awaitingActionBills = bills.filter(b => b.progress.find(d => d.step === 'governor').statusLabel === 'Pending');
-  const vetoedBills = bills.filter(b => b.progress.find(d => d.step === 'governor').statusLabel === 'Vetoed');
-  const amendmentSuggestedBills = bills.filter(b => b.progress.find(d => d.step === 'governor').statusLabel === 'Amendment suggested');
-  const vetoOverrideAttempts = bills.filter(b => b.progress.find(d => d.step === 'governor').statusLabel === 'Veto Override Pending');
-  const successfulVetoOverrides = bills.filter(b => b.progress.find(d => d.step === 'governor').statusLabel === 'Veto Overridden');
-  const signedBills = bills.filter(b => b.progress.find(d => d.step === 'governor').statusLabel === 'Signed');
-  const letBecomeLawBills = bills.filter(b => b.progress.find(d => d.step === 'governor').statusLabel === 'Became law unsigned');
+  // Filter bills based on status v2
+  const awaitingActionBills = bills.filter(b => {
+    const governorProgress = b.progress.find(d => d.step === 'governor');
+    return governorProgress && governorProgress.statusLabel === 'Pending';
+  });
 
-// console.log({
-//   bills,
-//   awaitingActionBills,
-//   vetoedBills,
-//   amendmentSuggestedBills,
-//   vetoOverrideAttempts,
-//   successfulVetoOverrides,
-//   signedBills
-// })
+  const vetoedBills = bills.filter(b => {
+    const governorProgress = b.progress.find(d => d.step === 'governor');
+    return governorProgress && governorProgress.statusLabel === 'Vetoed';
+  });
+
+  const amendmentSuggestedBills = bills.filter(b => {
+    const governorProgress = b.progress.find(d => d.step === 'governor');
+    return governorProgress && governorProgress.statusLabel === 'Amendment suggested';
+  });
+
+  const vetoOverrideAttempts = bills.filter(b => {
+    const governorProgress = b.progress.find(d => d.step === 'governor');
+    return governorProgress && governorProgress.statusLabel === 'Veto Override Pending';
+  });
+
+  const successfulVetoOverrides = bills.filter(b => {
+    const governorProgress = b.progress.find(d => d.step === 'governor');
+    return governorProgress && governorProgress.statusLabel === 'Veto Overridden';
+  });
+
+  const signedBills = bills.filter(b => {
+    const governorProgress = b.progress.find(d => d.step === 'governor');
+    return governorProgress && governorProgress.statusLabel === 'Signed';
+  });
+
+  const letBecomeLawBills = bills.filter(b => {
+    const governorProgress = b.progress.find(d => d.step === 'governor');
+    return governorProgress && governorProgress.statusLabel === 'Became law unsigned';
+  });
+
+
+  // console.log({
+  //   bills,
+  //   awaitingActionBills,
+  //   vetoedBills,
+  //   amendmentSuggestedBills,
+  //   vetoOverrideAttempts,
+  //   successfulVetoOverrides,
+  //   signedBills
+  // })
 
   return (
     <div>
@@ -110,7 +138,7 @@ const Governor = ({ bills }) => {
 
 // Fetch data at build time
 export async function getStaticProps() {
-  const bills = await import('../data/bills.json');
+  const bills = await import('../data-nodes/bills.json');
 
   return {
     props: {

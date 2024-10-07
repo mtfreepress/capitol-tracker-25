@@ -1,10 +1,9 @@
-import fs from 'fs'
-import path from 'path'
 import React from 'react'
 import { css } from '@emotion/react'
 import LawmakerTable from '../components/LawmakerTable'
+import lawmakers from '../data-nodes/lawmakers.json' 
 
-// CSS styles
+
 const sideBySideTableCss = css`
   display: flex;
   flex-wrap: wrap;
@@ -16,7 +15,7 @@ const tableContainerCss = css`
   margin: 0.5em;
 `
 
-const Roster = ({ lawmakers }) => {
+const Roster = () => {
   return (
     <div>
       <div css={sideBySideTableCss}>
@@ -34,15 +33,3 @@ const Roster = ({ lawmakers }) => {
 }
 
 export default Roster
-
-export async function getStaticProps() {
-  const filePath = path.join(process.cwd(), 'data-nodes', 'lawmakers.json')
-  const data = fs.readFileSync(filePath, 'utf8')
-  const lawmakers = JSON.parse(data)
-
-  return {
-    props: {
-      lawmakers,
-    },
-  }
-}

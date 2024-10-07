@@ -1,18 +1,20 @@
-import React from "react"
-import { graphql, Link } from 'gatsby'
-import { css } from '@emotion/react'
-import ReactMarkdown from 'react-markdown'
+import React from 'react';
+import Link from 'next/link';
+import { css } from '@emotion/react';
+import ReactMarkdown from 'react-markdown';
 
-import Layout from '../components/Layout'
-import Seo from "../components/Seo"
-import TruncatedContainer from '../components/TruncatedContainer'
-import Roster from '../components/Roster'
-import ChamberLeadership from '../components/ChamberLeadership'
-import CommitteeSummary from "../components/committee/Summary";
-import ContactUs from '../components/ContactUs'
-import NewsletterSignup from '../components/NewsletterSignup'
+import Layout from '../components/Layout';
+import Head from 'next/head';
+import TruncatedContainer from '../components/TruncatedContainer';
+import Roster from '../components/Roster';
+import ChamberLeadership from '../components/ChamberLeadership';
+import CommitteeSummary from '../components/committee/Summary';
+import ContactUs from '../components/ContactUs';
+import NewsletterSignup from '../components/NewsletterSignup';
 
-import houseData from '../data/house.json'
+import houseData from '../data/house.json';
+import committeesData from '../data-nodes/committees.json';
+import lawmakers from '../data-nodes/lawmakers.json'; // Import your lawmakers data
 
 const committeeItemStyle = css`
   border: 1px solid var(--tan5);
@@ -28,102 +30,72 @@ const committeeItemStyle = css`
     a {
       text-transform: uppercase;
     }
-    
   }
-`
+`;
 
-// TODO - break this out to app text
 const leadership = [
   { role: 'Speaker of the House', name: 'Rep. Matt Regier (R-Kalispell)', key: 'Matt-Regier' },
   { role: 'Majority Leader', name: 'Rep. Sue Vinton (R-Billings)', key: 'Sue-Vinton' },
   { role: 'Minority Leader', name: 'Rep. Kim Abbott (D-Helena)', key: 'Kim-Abbott' },
-]
+];
 
-const House = ({ data, location }) => {
-  const { text } = houseData
-  const representatives = data.allLawmakersJson.edges.map(d => d.node)
-  const committees = data.allCommitteesJson.edges.map(d => d.node)
-  return <div>
+const House = ({ representatives, committees }) => {
+  const { text } = houseData;
 
-    <Layout location={location}>
-      <h1>The Montana House</h1>
-      <Link to="/house#members">Representatives ({representatives.length}) </Link> • <Link to="/house#committees">Committees ({committees.length})</Link>
+  return (
+    <div>
+      <Layout>
+        <Head>
+          <title>House</title>
+          <meta name="description" content="Representatives and committees of the Montana House" />
+        </Head>
 
-      <ReactMarkdown>{text}</ReactMarkdown>
+        <h1>The Montana House</h1>
+        <Link href="/house#members">Representatives ({representatives.length})</Link> {' • '}
+        <Link href="/house#committees">Committees ({committees.length})</Link>
 
-      <h3>Leadership</h3>
-      <ChamberLeadership leadership={leadership} />
+        <ReactMarkdown>{text}</ReactMarkdown>
 
-      {/* <ChamberCommittees committees={committees} /> */}
-      <h3 id="members">Representatives</h3>
-      <TruncatedContainer height={600} closedText="See full roster" openedText="See less">
-        <Roster chamberLabel="House" lawmakers={representatives} />
-      </TruncatedContainer>
+        <h3>Leadership</h3>
+        <ChamberLeadership leadership={leadership} />
 
-      <NewsletterSignup />
+        <h3 id="members">Representatives</h3>
+        <TruncatedContainer height={600} closedText="See full roster" openedText="See less">
+          <Roster chamberLabel="House" lawmakers={representatives} />
+        </TruncatedContainer>
 
-      <h3 id="committees">House Committees</h3>
-      {
-        committees.map(committee => {
-          const { name, key, members } = committee
-          return <div key={name} css={committeeItemStyle}>
-            <h4>👥 <Link to={`/committees/${key}/`}>{name}</Link> • {members.length} members</h4>
+        <NewsletterSignup />
+
+        <h3 id="committees">House Committees</h3>
+        {committees.map(committee => (
+          <div key={committee.name} css={committeeItemStyle}>
+            <h4>
+              👥 <Link href={`/committees/${committee.key}/`}>{committee.name}</Link> {' • '}
+              {committee.members.length} members
+            </h4>
             <CommitteeSummary {...committee} billCount={committee.bills.length} />
           </div>
-        })
-      }
+        ))}
 
+        <ContactUs />
+      </Layout>
+    </div>
+  );
+};
 
+export async function getStaticProps() {
+  // Filter active house representatives from lawmakers.json
+  const representatives = lawmakers.filter(lawmaker => lawmaker.chamber === 'house' && lawmaker.isActive);
+  
+  // Filter house committees
+  const committees = committeesData.filter(committee => committee.chamber === 'house');
 
-      <ContactUs />
-
-    </Layout>
-  </div>
+  return {
+    props: {
+      representatives,
+      committees,
+    },
+  };
 }
 
-export const Head = () => (
-  <Seo
-    title="House"
-    description="Representatives and committees of the Montana House"
-    pageRelativeUrl='house/'
-  />
-)
-
-export const query = graphql`
-  query HousePageQuery {
-    allLawmakersJson(filter: {
-        chamber: {eq: "house"},
-        isActive: {eq: true},
-      }, sort: {districtNum: ASC}) {
-      edges {
-        node {
-          ...RosterData
-        }
-      }
-    }
-    allCommitteesJson(filter: {
-        chamber: {eq: "house"}
-      }) {
-      edges {
-        node {
-          name,
-          key,
-          chamber,
-          bills,
-          billsUnscheduled,
-          billsScheduled,
-          billsAwaitingVote,
-          billsAdvanced,
-          billsFailed,
-          # billsBlasted,
-          members {
-            name
-          }
-        }
-      }
-    }
-  }
-  
-`
-
-export default House
+export default House;

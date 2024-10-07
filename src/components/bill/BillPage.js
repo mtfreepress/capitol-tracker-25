@@ -19,6 +19,8 @@ const BillPage = ({ bill }) => {
     billPageText
   } = bill;
 
+  console.log("Bill actions:", actions);
+
   return (
     <div>
       <Layout>
