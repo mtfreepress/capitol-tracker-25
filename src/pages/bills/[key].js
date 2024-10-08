@@ -1,3 +1,5 @@
+import { promises as fs } from 'fs';
+import path from 'path';
 import BillPage from '../../components/bill/BillPage';
 import bills from '../../data-nodes/bills.json';
 
@@ -11,8 +13,42 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
     const bill = bills.find(bill => bill.key === params.key);
+    
+    if (!bill) {
+        return { notFound: true };
+    }
 
-    return { props: { bill } };
+    const actions = await loadBillActions(bill.identifier);
+
+    return { 
+        props: { 
+            bill: {
+                ...bill,
+                actions: actions
+            } 
+        } 
+    };
+}
+
+async function loadBillActions(billId) {
+    const dataDir = path.join(process.cwd(), 'src/data');
+    const files = await fs.readdir(dataDir);
+    const actionFiles = files.filter(file => file.startsWith('bill-actions-') && file.endsWith('.json'));
+
+    let allActions = [];
+
+    for (const file of actionFiles) {
+        const filePath = path.join(dataDir, file);
+        const fileContent = await fs.readFile(filePath, 'utf8');
+        const actionsChunk = JSON.parse(fileContent);
+        const billActions = actionsChunk.find(item => item.bill === billId);
+        if (billActions) {
+            allActions = billActions.actions;
+            break;  // We've found our bill's actions, no need to continue
+        }
+    }
+
+    return allActions;
 }
 
 const Bill = ({ bill }) => {
