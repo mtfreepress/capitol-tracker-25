@@ -148,7 +148,7 @@ const LawmakerCard = ({ lawmaker, portrait }) => {
           )}
         </div>
         <div className="item"><Link href={`${BASE_URL}/lawmakers/${key}#bills-sponsored`} passHref>📋 <strong>{sponsoredBills.length}</strong> bill(s) introduced</Link></div>
-        <div className="promo"><Link href={`${BASE_URL}/`} passHref>See more</Link> on MTFP's 2023 Capitol Tracker.</div>
+        <div className="promo"><Link href={`${BASE_URL}/`} passHref>See more</Link> on MTFP&#39;s 2023 Capitol Tracker.</div>
       </div>
     </div>
   );

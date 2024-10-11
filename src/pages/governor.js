@@ -120,14 +120,14 @@ const Governor = ({ bills }) => {
 
         <h4>Became law without signature</h4>
         <div className="note">
-          Bills that have become law without the governor's signature after the governor chooses not to issue a signature or a veto by the 10-day deadline specified in the Montana Constitution.
+          Bills that have become law without the governor&#39;s signature after the governor chooses not to issue a signature or a veto by the 10-day deadline specified in the Montana Constitution.
         </div>
         <BillTable bills={letBecomeLawBills} displayLimit={5} />
 
         <NewsletterSignup />
 
         <h3>Montana Free Press coverage</h3>
-        <div>2023 legislative stories involving the Governor's Office.</div>
+        <div>2023 legislative stories involving the Governor&#39;s Office.</div>
         <LinksList articles={articles} />
 
         <ContactUs />

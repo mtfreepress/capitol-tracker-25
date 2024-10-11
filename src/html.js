@@ -1,10 +1,11 @@
-import React from "react"
-import PropTypes from "prop-types"
+import React from "react";
+import PropTypes from "prop-types";
+import Head from "next/head";
 
 export default function HTML(props) {
   return (
     <html {...props.htmlAttributes}>
-      <head>
+      <Head>
         <meta charSet="utf-8" />
         <meta httpEquiv="x-ua-compatible" content="ie=edge" />
         <meta
@@ -12,7 +13,7 @@ export default function HTML(props) {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
         {props.headComponents}
-      </head>
+      </Head>
       <body {...props.bodyAttributes}>
         {props.preBodyComponents}
         <div
@@ -21,10 +22,16 @@ export default function HTML(props) {
           dangerouslySetInnerHTML={{ __html: props.body }}
         />
         {props.postBodyComponents}
-        <script id="parsely-cfg" src="https://cdn.parsely.com/keys/montanafreepress.org/p.js"></script>
+
+        {/* Loads Parsely script asynchronously to fix next error */}
+        <script
+          id="parsely-cfg"
+          src="https://cdn.parsely.com/keys/montanafreepress.org/p.js"
+          async
+        ></script>
       </body>
     </html>
-  )
+  );
 }
 
 HTML.propTypes = {
@@ -34,4 +41,4 @@ HTML.propTypes = {
   preBodyComponents: PropTypes.array,
   body: PropTypes.string,
   postBodyComponents: PropTypes.array,
-}
+};

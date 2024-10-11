@@ -13,7 +13,7 @@ import {
 
 import {
   tableStyle
-} from '../../config/styles'; 
+} from '../../config/styles';
 
 import {
   partyColors,
@@ -112,7 +112,7 @@ const BillActions = ({ actions, lawsUrl, vetoMemoUrl }) => {
       url: (action) => vetoMemoUrl,
     },
   ];
-  
+
   const rows = actions.filter(actionFilter).map((d, i) => Action(d, showVotes, annotations));
 
 
@@ -142,7 +142,7 @@ const BillActions = ({ actions, lawsUrl, vetoMemoUrl }) => {
         </button>
       </div>
       <div className="note">
-        This table may omit bill actions recorded since this guide's last update. See the{' '}
+        This table may omit bill actions recorded since this guide&#39;s last update. See the{' '}
         <a href={lawsUrl}>bill page in LAWS</a> for an official reference.
       </div>
     </div>
@@ -205,13 +205,14 @@ const Action = (action, showVotes, annotations) => {
 
           {annotations
             .filter((a) => a.descriptionFilter(action))
-            .map((annot) => {
+            .map((annot, index) => {
               if (annot.url(action)) {
-                return <a href={annot.url(action)}>{annot.label(action)}</a>;
+                return <a key={index} href={annot.url(action)}>{annot.label(action)}</a>;
               } else {
-                return <span>{annot.label(action)}</span>;
+                return <span key={index}>{annot.label(action)}</span>;
               }
             })}
+
         </div>
       </td>
     </tr>

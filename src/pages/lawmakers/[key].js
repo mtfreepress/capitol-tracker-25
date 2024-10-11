@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import LawmakerPortrait from '../../components/lawmaker/Portrait';
 import { pluralize, ordinalize, listToText, cleanPhoneString } from '../../config/utils'; 
 import { partyColors } from '../../config/config'
-import { getLawmakerData, getAllLawmakerKeys } from '../../lib/lawmaker'; 
+import { getLawmakerData, getAllLawmakerKeys, fetchPortraitImage } from '../../lib/lawmaker'; 
 
 // Define styles
 const topperBar = css`

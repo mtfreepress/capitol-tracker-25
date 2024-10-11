@@ -44,7 +44,7 @@ async function loadBillActions(billId) {
         const billActions = actionsChunk.find(item => item.bill === billId);
         if (billActions) {
             allActions = billActions.actions;
-            break;  // We've found our bill's actions, no need to continue
+            break;
         }
     }
 

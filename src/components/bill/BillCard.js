@@ -89,7 +89,7 @@ const BillCard = ({ bill }) => {
                     </div>
                 </div>
                 <div className="promo">
-                    <a href={`${BASE_URL}/bills/${key}`} target="_blank" rel="noopener noreferrer">See more</a> on MTFP's 2023 Capitol Tracker.
+                    <a href={`${BASE_URL}/bills/${key}`} target="_blank" rel="noopener noreferrer">See more</a> on MTFP&#39;s 2023 Capitol Tracker.
                 </div>
             </div>
 

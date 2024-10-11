@@ -114,10 +114,10 @@ const Calendar = ({ committees, onCalendarBills }) => {
         <div>
             <Layout>
                 <Head>
-                    <title>What's coming up at the Legislature</title>
+                    <title>What&#39;s coming up at the Legislature</title>
                     <meta name="description" content="What's coming up at the 2023 Legislature" />
                 </Head>
-                <h1>What's coming up at the Legislature</h1>
+                <h1>What&#39;s coming up at the Legislature</h1>
                 <div>
                     {days.map((day, i) => (
                         <span key={day}>
