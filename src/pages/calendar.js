@@ -7,8 +7,9 @@ import ContactUs from "../components/ContactUs";
 import NewsletterSignup from "../components/NewsletterSignup";
 import BillTable from "../components/BillTable";
 
+
 import calendarJson from "../data/calendar.json";
-import committeesJson from "../data/committee.json";
+import committeesJson from "../data-nodes/committees.json";
 import { shortDateWithWeekday, committeeUrl, capitalize } from "../config/utils";
 
 // Styles

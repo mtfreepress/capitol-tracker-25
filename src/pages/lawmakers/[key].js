@@ -1,7 +1,8 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import LawmakerPortrait from '../../components/lawmaker/Portrait';
-import { partyColors, pluralize, ordinalize, listToText, cleanPhoneString } from '../../config/utils'; 
+import { pluralize, ordinalize, listToText, cleanPhoneString } from '../../config/utils'; 
+import { partyColors } from '../../config/config'
 import { getLawmakerData, getAllLawmakerKeys } from '../../lib/lawmaker'; 
 
 // Define styles

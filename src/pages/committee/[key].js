@@ -1,6 +1,6 @@
 import CommitteePage from '../../components/committee/CommitteePage';
-import committees from '../../data/committees.json';
-import bills from '../../data/bills.json';
+import committees from '../../data-nodes/committees.json';
+import bills from '../../data-nodes/bills.json';
 
 export async function getStaticPaths() {
     const paths = committees.map(committee => ({

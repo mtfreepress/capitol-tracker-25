@@ -101,10 +101,9 @@ const LawmakerTable = ({ lawmakers }) => {
     const rowSort = isSortReversed ?
         (a, b) => sortFunctions[sortFunctionKey](b, a) // reverse sort direction
         : sortFunctions[sortFunctionKey];
-
     const rows = lawmakers
         .sort(rowSort)
-        .map(lawmaker => <Row key={lawmaker.key} {...lawmaker} />); 
+        .map(lawmaker => <Row key={lawmaker.key} {...lawmaker} />);
     return (
         <div>
             <table css={[tableStyle, lawmakerTableCss]}>
@@ -128,9 +127,8 @@ const LawmakerTable = ({ lawmakers }) => {
 };
 
 const Row = ({ name, party, district, locale, votingSummary }) => {
-    // const { fractionVotesOnWinningSide, fractionVotesWithGopCaucus, fractionVotesWithDemCaucus } = votingSummary
     return (
-        <tr key={name}>
+        <tr>
             <td css={[col1, partyControlCss(party)]}>
                 <div>{district.slice(0, 2)}</div>
                 <div>{district.slice(3,)}</div>

@@ -75,8 +75,14 @@ const imgCss = css`
 const NewsletterSignup = props => {
     return <div css={style}>
         <div className="row">
-            <div className="img-col">
-                <Image src={wideCapitolizedLogo} alt="Capitolized newsletter" css={imgCss} layout="responsive" />
+            <div className="img-col" style={{ position: 'relative', width: '100%', height: 'auto' }}>
+                <Image
+                    src={wideCapitolizedLogo}
+                    alt="Capitolized newsletter"
+                    css={imgCss}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 700px"
+                />
             </div>
             <div className="words-col">
                 <div className="message">Sign up for CAPITOLIZED</div>
