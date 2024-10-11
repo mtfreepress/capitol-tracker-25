@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { css } from '@emotion/react';
-import { bottomFadeCss, inlineButtonCss } from '../config/styles.js';
 
 const centeredButtonCss = css`
     display: block;

@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { partyColors } from '../config/config';
 import { lawmakerUrl } from '../config/utils';
-import { tableStyle } from '../config/styles';
+import { tableStyle } from '../config/styles.js';
 
 const lawmakerTableCss = css`
     max-width: 95vw;

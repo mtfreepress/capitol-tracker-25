@@ -3,9 +3,12 @@ const nextConfig = {
   compiler: {
     emotion: true,
   },
+  swcMinify: false,
+  productionBrowserSourceMaps: true,
   webpack: (config, { dev, isServer }) => {
     if (!dev && !isServer) {
       config.optimization.minimize = false;
+      config.optimization.minimizer = [];
     }
     return config;
   },

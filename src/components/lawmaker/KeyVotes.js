@@ -13,7 +13,7 @@ import {
 
 import {
     tableStyle,
-} from '../../config/styles';
+} from '../../config/styles.js';
 
 const keyVotesStyle = css`
   tr.vote-row {

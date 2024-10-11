@@ -9,7 +9,7 @@ import {
 import {
     containerStyle,
     noteStyle
-} from '../config/styles';
+} from '../config/styles.js';
 
 const linkContainerStyle = css`
     display: flex;

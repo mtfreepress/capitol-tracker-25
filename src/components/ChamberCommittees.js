@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { numberFormat } from '../config/utils';
 import {
     tableStyle,
-} from '../config/styles';
+} from '../config/styles.js';
 
 const committeeTableCss = css``;
 

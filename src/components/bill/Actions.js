@@ -11,9 +11,9 @@ import {
   committeeUrl,
 } from '../../config/utils';
 
-import {
-  tableStyle
-} from '../../config/styles';
+// import {
+//   tableStyle
+// } from '../../config/styles.js.old';
 
 import {
   partyColors,

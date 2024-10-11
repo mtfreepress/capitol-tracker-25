@@ -15,7 +15,7 @@ import {
 import {
   tableStyle,
   noteStyle,
-} from '../config/styles';
+} from '../config/styles.js';
 
 const inlineButtonCss = css`
   display: inline-block;
