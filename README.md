@@ -1,4 +1,6 @@
-# Montana Free Press 2025 Capitol Tracker
+# This project is being superseded and will be deleted once the replacement is finished
+
+#### Montana Free Press 2025 Capitol Tracker
 
 This project is an effort to make the quantifiable aspects of the Montana Legislature more accessible to the public by compiling information about lawmakers, proposed bills and the legislative process. This is an effort of [Montana Free Press](http://montanafreepress.org/), a 501(c)(3) nonprofit newsroom that aims to provide Montanans with in-depth, nonpartisan news coverage.
 
